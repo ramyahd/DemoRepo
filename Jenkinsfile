@@ -9,30 +9,30 @@ pipeline {
                     sh 'mvn clean package'
                  }
             }
-           stage("SonarQube analysis") {
-            steps {
-              withSonarQubeEnv('sonarqube') {
-                sh 'mvn sonar:sonar -Pprofile1'
-              }
-            } 
-            } 
+   //        stage("SonarQube analysis") {
+     //       steps {
+       //       withSonarQubeEnv('sonarqube') {
+         //       sh 'mvn sonar:sonar -Pprofile1'
+           //   }
+            //} 
+            //} 
         
-        stage("Quality Gate") {
-            steps {
-              timeout(time: 5, unit: 'MINUTES') { // Just in case something goes wrong, pipeline will be killed after a timeout
-                waitForQualityGate abortPipeline: true //waiting for a task to be completed
-              }
-            }
-       }
-  stage("nexus") {
-            steps {
-          withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'password', usernameVariable:'username')]) {
-              sh 'curl -u ${username}:${password} --upload-file target/WebApplication-1.war http://ec2-18-224-155-110.us-east-2.compute.amazonaws.com:8081/nexus/content/repositories/devopstraining/phoenixTeam/WebApplication-${BUILD_NUMBER}.war'
-              sh 'curl -u ${username}:${password} --upload-file target/WebApplication-1.war http://ec2-18-224-155-110.us-east-2.compute.amazonaws.com:8081/nexus/content/repositories/devopstraining/phoenixTeam/WebApplication-1.war'
+        //stage("Quality Gate") {
+          //  steps {
+            //  timeout(time: 5, unit: 'MINUTES') { // Just in case something goes wrong, pipeline will be killed after a timeout
+              //  waitForQualityGate abortPipeline: true //waiting for a task to be completed
+              //}
+            //}
+      // }
+  //stage("nexus") {
+    //        steps {
+      //    withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'password', usernameVariable:'username')]) {
+        //      sh 'curl -u ${username}:${password} --upload-file target/WebApplication-1.war http://ec2-18-224-155-110.us-east-2.compute.amazonaws.com:8081/nexus/content/repositories/devopstraining/phoenixTeam/WebApplication-${BUILD_NUMBER}.war'
+          //    sh 'curl -u ${username}:${password} --upload-file target/WebApplication-1.war http://ec2-18-224-155-110.us-east-2.compute.amazonaws.com:8081/nexus/content/repositories/devopstraining/phoenixTeam/WebApplication-1.war'
         //sh 'curl -v -F r=devopstraining -F hasPom=true -F e=war -F file=@pom.xml -F file=@target/WebApplication-0.0.1-SNAPSHOT.war -u ${username}:${password} http://ec2-18-224-155-110.us-east-2.compute.amazonaws.com:8081/nexus/content/repositories/devopstraining/phoenixTeam/WebApplication-0.0.1-SNAPSHOT.war'
-         }
-        }
-        }
+         //}
+        //}
+        //}
         
         //stage(" copying war to ansible"){
             //steps{
@@ -52,14 +52,14 @@ pipeline {
             }
         }
     }
-        post{
-                success{
+        //post{
+          //      success{
                     //slackSend baseUrl: 'https://hooks.slack.com/services/', botUser: true, channel: 'team_phoenix', color: 'good', message: "build number is '[${BUILD_NUMBER}]'", notifyCommitters: true, username: 'phoenix', tokenCredentialId: 'slack-cred'
-                    slackSend baseUrl: 'https://hooks.slack.com/services/', channel: 'team_phoenix', color: 'good', message: "build with number '[${BUILD_NUMBER}]' IS SUCCESSFUL", tokenCredentialId: 'slack-cred', username: 'phoenix'
-                        }
-                unsuccessful{
-                    slackSend baseUrl: 'https://hooks.slack.com/services/', channel: 'team_phoenix', color: 'danger', message: "build with number '[${BUILD_NUMBER}]' IS A FAILURE", tokenCredentialId: 'slack-cred', username: 'phoenix'
-                            }
+            //        slackSend baseUrl: 'https://hooks.slack.com/services/', channel: 'team_phoenix', color: 'good', message: "build with number '[${BUILD_NUMBER}]' IS SUCCESSFUL", tokenCredentialId: 'slack-cred', username: 'phoenix'
+              //          }
+                //unsuccessful{
+                  //  slackSend baseUrl: 'https://hooks.slack.com/services/', channel: 'team_phoenix', color: 'danger', message: "build with number '[${BUILD_NUMBER}]' IS A FAILURE", tokenCredentialId: 'slack-cred', username: 'phoenix'
+                    //        }
            /* withCredentials([string(credentialsId: 'slack-cred', variable: 'slack_credentials')])
             {
             curl -H "Content-type: application/json" -X POST --data-urlencode -d 
